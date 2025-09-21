@@ -5,7 +5,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DOCKER_IMAGE_NAME: jlesage/nginx-proxy-manager
+  DOCKER_IMAGE_NAME: yulonger/nginx-proxy-manager
   PLATFORMS: linux/amd64,linux/386,linux/arm/v6,linux/arm/v7,linux/arm64/v8
 
 on:
