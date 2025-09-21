@@ -9,21 +9,21 @@ log() {
 
 # Make sure mandatory directories exist.
 mkdir -p \
-    /config/log \
-    /config/letsencrypt/archive \
-    /config/letsencrypt-acme-challenge \
-    /config/custom_ssl \
-    /config/access \
-    /config/nginx/default_host \
-    /config/nginx/default_www \
-    /config/nginx/cache \
-    /config/nginx/proxy_host \
-    /config/nginx/redirection_host \
-    /config/nginx/stream \
-    /config/nginx/dead_host \
-    /config/nginx/temp \
-    /config/log/letsencrypt \
-    /config/letsencrypt-workdir \
+    /home/site/wwwroot/config/log \
+    /home/site/wwwroot/config/letsencrypt/archive \
+    /home/site/wwwroot/config/letsencrypt-acme-challenge \
+    /home/site/wwwroot/config/custom_ssl \
+    /home/site/wwwroot/config/access \
+    /home/site/wwwroot/config/nginx/default_host \
+    /home/site/wwwroot/config/nginx/default_www \
+    /home/site/wwwroot/config/nginx/cache \
+    /home/site/wwwroot/config/nginx/proxy_host \
+    /home/site/wwwroot/config/nginx/redirection_host \
+    /home/site/wwwroot/config/nginx/stream \
+    /home/site/wwwroot/config/nginx/dead_host \
+    /home/site/wwwroot/config/nginx/temp \
+    /home/site/wwwroot/config/log/letsencrypt \
+    /home/site/wwwroot/config/letsencrypt-workdir \
 
 # Make sure directories required for nginx exist.
 for DIR in /var/run/nginx /var/tmp/nginx
@@ -33,26 +33,26 @@ do
 done
 
 # Create symlinks for logs.
-[ ! -L /config/log/log ] || rm /config/log/log
-ln -snf log /config/logs
+[ ! -L /home/site/wwwroot/config/log/log ] || rm /home/site/wwwroot/config/log/log
+ln -snf log /home/site/wwwroot/config/logs
 
 # Make sure to remove old letsencrypt config file.
 [ ! -f $XDG_CONFIG_HOME/letsencrypt/cli.ini ] || mv $XDG_CONFIG_HOME/letsencrypt/cli.ini $XDG_CONFIG_HOME/letsencrypt/cli.ini.removed
 
 # Fix any references to the old log path.
-find /config/nginx -not \( -path /config/nginx/custom -prune \) -type f -name '*.conf' | while read file
+find /home/site/wwwroot/config/nginx -not \( -path /home/site/wwwroot/config/nginx/custom -prune \) -type f -name '*.conf' | while read file
 do
-    sed -i 's|/data/logs/|/config/log/|' "$file"
+    sed -i 's|/data/logs/|/home/site/wwwroot/config/log/|' "$file"
 done
 
 # Install default config.
-[ -f /config/nginx/ip_ranges.conf ] || cp /defaults/ip_ranges.conf /config/nginx/
-[ -f /config/production.json ] || cp /defaults/production.json /config/
+[ -f /home/site/wwwroot/config/nginx/ip_ranges.conf ] || cp /defaults/ip_ranges.conf /home/site/wwwroot/config/nginx/
+[ -f /home/site/wwwroot/config/production.json ] || cp /defaults/production.json /home/site/wwwroot/config/
 
 # Make sure there is no migration lock held.
 # See https://github.com/jlesage/docker-nginx-proxy-manager/issues/4
-if [ -f /config/database.sqlite ]; then
-    echo 'DELETE FROM migrations_lock WHERE is_locked = 1;' | sqlite3 /config/database.sqlite
+if [ -f /home/site/wwwroot/config/database.sqlite ]; then
+    echo 'DELETE FROM migrations_lock WHERE is_locked = 1;' | sqlite3 /home/site/wwwroot/config/database.sqlite
 fi
 
 # Generate the resolvers configuration file.
@@ -65,6 +65,6 @@ fi
 
 # Handle IPv6 settings.
 /opt/nginx-proxy-manager/bin/handle-ipv6-setting /etc/nginx/conf.d
-/opt/nginx-proxy-manager/bin/handle-ipv6-setting /config/nginx
+/opt/nginx-proxy-manager/bin/handle-ipv6-setting /home/site/wwwroot/config/nginx
 
 # vim:ft=sh:ts=4:sw=4:et:sts=4

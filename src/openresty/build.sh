@@ -121,8 +121,8 @@ log "Configuring OpenResty..."
         --conf-path=/etc/nginx/nginx.conf \
         --pid-path=/var/run/nginx/nginx.pid \
         --lock-path=/var/run/nginx/nginx.lock \
-        --error-log-path=/config/log/error.log \
-        --http-log-path=/config/log/access.log \
+        --error-log-path=/home/site/wwwroot/config/log/error.log \
+        --http-log-path=/home/site/wwwroot/config/log/access.log \
         \
         --http-client-body-temp-path=/var/tmp/nginx/client_body \
         --http-proxy-temp-path=/var/tmp/nginx/proxy \

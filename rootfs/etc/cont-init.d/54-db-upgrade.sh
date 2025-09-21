@@ -34,7 +34,7 @@ start_db() {
 
     # Start mysqld.
     mkdir -p /run/mysqld
-    /usr/bin/mysqld --user=$(whoami) --datadir /config/mysql --tmpdir /tmp/ &
+    /usr/bin/mysqld --user=$(whoami) --datadir /home/site/wwwroot/config/mysql --tmpdir /tmp/ &
     pid="$!"
 
     # Wait until it is ready.
@@ -61,17 +61,17 @@ stop_db() {
 }
 
 # Check if a mysql database exists.
-if [ ! -d /config/mysql ]; then
+if [ ! -d /home/site/wwwroot/config/mysql ]; then
     exit 0
 fi
 
 # Handle case where a previous conversion didn't went well.
-if [ -f /config/db_convert_in_progress ]; then
-    rm -f /config/database.sqlite
+if [ -f /home/site/wwwroot/config/db_convert_in_progress ]; then
+    rm -f /home/site/wwwroot/config/database.sqlite
 fi
 
 log "MySQL database conversion needed."
-touch /config/db_convert_in_progress
+touch /home/site/wwwroot/config/db_convert_in_progress
 
 # Temporarily start the database.
 install_db
@@ -83,25 +83,25 @@ log "Dumping database..."
 
 # Convert the database.
 log "Converting database..."
-/opt/nginx-proxy-manager/bin/mysql2sqlite /tmp/mysqldump.sql | sqlite3 /config/database.sqlite
+/opt/nginx-proxy-manager/bin/mysql2sqlite /tmp/mysqldump.sql | sqlite3 /home/site/wwwroot/config/database.sqlite
 
 # Update the database settings in configuration.
-if [ -f /config/production.json ]; then
-    if [ "$(jq -r '.database.engine' /config/production.json)" == "mysql" ]
+if [ -f /home/site/wwwroot/config/production.json ]; then
+    if [ "$(jq -r '.database.engine' /home/site/wwwroot/config/production.json)" == "mysql" ]
     then
         log "Updating database settings in config file..."
-        jq -n 'input | .database = input.database' /config/production.json /defaults/production.json > /config/production.json.updated
+        jq -n 'input | .database = input.database' /home/site/wwwroot/config/production.json /defaults/production.json > /home/site/wwwroot/config/production.json.updated
     fi
 fi
 
 # Database converted properly.
 log "Database conversion done."
-rm /config/db_convert_in_progress
+rm /home/site/wwwroot/config/db_convert_in_progress
 rm /tmp/mysqldump.sql
-mv /config/mysql /config/mysql.converted
-if [ -f /config/production.json.updated ]; then
-    mv /config/production.json /config/production.json.old
-    mv /config/production.json.updated /config/production.json
+mv /home/site/wwwroot/config/mysql /home/site/wwwroot/config/mysql.converted
+if [ -f /home/site/wwwroot/config/production.json.updated ]; then
+    mv /home/site/wwwroot/config/production.json /home/site/wwwroot/config/production.json.old
+    mv /home/site/wwwroot/config/production.json.updated /home/site/wwwroot/config/production.json
 fi
 
 # Stop the database.

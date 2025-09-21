@@ -4,7 +4,7 @@
     "knex": {
       "client": "sqlite3",
       "connection": {
-        "filename": "/config/database.sqlite"
+        "filename": "/home/site/wwwroot/config/database.sqlite"
       },
       "useNullAsDefault": true
     }

@@ -172,30 +172,30 @@ sed -i 's|/tmp/nginx/body|/var/tmp/nginx/body|' $ROOTFS/etc/nginx/nginx.conf
 # Fix the logrotate config.
 sed -i 's|npm npm|app app|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
 sed -i 's|/run/nginx.pid|/run/nginx/nginx.pid|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
-sed -i 's|logrotate /etc/logrotate.d/nginx-proxy-manager|logrotate -s /config/logrotate.status /etc/logrotate.d/nginx-proxy-manager|' $ROOTFS/opt/nginx-proxy-manager/setup.js
+sed -i 's|logrotate /etc/logrotate.d/nginx-proxy-manager|logrotate -s /home/site/wwwroot/config/logrotate.status /etc/logrotate.d/nginx-proxy-manager|' $ROOTFS/opt/nginx-proxy-manager/setup.js
 sed -i 's|/data/logs/\*/access.log|/data/logs/access.log|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
 sed -i 's|/data/logs/\*/error.log|/data/logs/error.log|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
 
-# Redirect `/data' to '/config'.
-ln -s /config $ROOTFS/data
+# Redirect `/data' to '/home/site/wwwroot/config'.
+ln -s /home/site/wwwroot/config $ROOTFS/data
 
 # Make sure the config file for IP ranges is stored in persistent volume.
 mv $ROOTFS/etc/nginx/conf.d/include/ip_ranges.conf $ROOTFS/defaults/
-ln -sf /config/nginx/ip_ranges.conf $ROOTFS/etc/nginx/conf.d/include/ip_ranges.conf
+ln -sf /home/site/wwwroot/config/nginx/ip_ranges.conf $ROOTFS/etc/nginx/conf.d/include/ip_ranges.conf
 
 # Make sure the config file for resolvers is stored in persistent volume.
-ln -sf /config/nginx/resolvers.conf $ROOTFS/etc/nginx/conf.d/include/resolvers.conf
+ln -sf /home/site/wwwroot/config/nginx/resolvers.conf $ROOTFS/etc/nginx/conf.d/include/resolvers.conf
 
 # Make sure nginx cache is stored on the persistent volume.
-ln -s /config/nginx/cache $ROOTFS/var/lib/nginx/cache
+ln -s /home/site/wwwroot/config/nginx/cache $ROOTFS/var/lib/nginx/cache
 
 # Make sure the manager config file is stored in persistent volume.
 rm -r $ROOTFS/opt/nginx-proxy-manager/config
 mkdir $ROOTFS/opt/nginx-proxy-manager/config
-ln -s /config/production.json $ROOTFS/opt/nginx-proxy-manager/config/production.json
+ln -s /home/site/wwwroot/config/production.json $ROOTFS/opt/nginx-proxy-manager/config/production.json
 
 # Make sure letsencrypt certificates are stored in persistent volume.
-ln -s /config/letsencrypt $ROOTFS/etc/letsencrypt
+ln -s /home/site/wwwroot/config/letsencrypt $ROOTFS/etc/letsencrypt
 
 # Cleanup.
 find $ROOTFS/opt/nginx-proxy-manager -name "*.h" -delete
