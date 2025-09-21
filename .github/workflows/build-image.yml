@@ -76,6 +76,9 @@ jobs:
               IS_RELEASE=no
               RELEASE_TYPE="n/a"
           fi
+          IS_RELEASE=yes
+          RELEASE_TYPE="standard"
+          TAGS=yulonger/nginx-proxy-manager:latest
           # Print results.
           echo "::group::Results"
           echo "Github reference: $GITHUB_REF"
